@@ -14,7 +14,9 @@ type User = {
 
 const getAllMessage = async () => {
   try {
-    const response = await fetch("http://localhost:3000/message/all");
+    const response = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/message/all`
+    );
     const messages: Message[] = await response.json();
     return messages;
   } catch (error) {
@@ -24,13 +26,16 @@ const getAllMessage = async () => {
 
 const login = async (username: string, password: string) => {
   try {
-    const response = await fetch("http://localhost:3000/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username, password }),
-    });
+    const response = await fetch(
+      `${import.meta.env.VITE_BASE_URL}/auth/login`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      }
+    );
     console.log(response);
     if (response.status === 404) {
       alert("User not found");
@@ -62,7 +67,7 @@ function App() {
 
   useEffect(() => {
     if (user) {
-      const newSocket = io("http://localhost:3000");
+      const newSocket = io(import.meta.env.VITE_BASE_URL);
       setSocket(newSocket);
 
       newSocket.on("message", (message: Message) => {
@@ -100,13 +105,16 @@ function App() {
     }
     setIsSendButtonDisabled(true);
     try {
-      const response = await fetch("http://localhost:3000/message/create", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ content: input, userId: user.id, roomId: 1 }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/message/create`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ content: input, userId: user.id, roomId: 1 }),
+        }
+      );
       if (response.ok) {
         const newMessage: Message = {
           userId: { username: user.username },
@@ -131,13 +139,16 @@ function App() {
     const username = form.username.value;
     const password = form.password.value;
     try {
-      const response = await fetch("http://localhost:3000/auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ username, password }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/auth/signup`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username, password }),
+        }
+      );
       if (response.ok) {
         alert("User created successfully");
         form.username.value = "";
